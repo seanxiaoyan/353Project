@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title> Forms </title>
+</head>
+<body>
+    <script type = "text/javascript"> 
+
+    function AddItem() {
+      var http = new XMLHttpRequest();
+      var url = '/newItem';
+      var item =document.getElementById("item")
+      var inputItem = encodeURIComponent(item.value)
+      var price =document.getElementById("price")
+      var inputPrice = encodeURIComponent(price.value)
+      var params = "item="+inputItem+"&"+"price="+inputPrice;
+      http.open('POST', url, true);
+      http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    
+      console.log()
+      http.send(params);
+      http.onreadystatechange = function() {
+          if(http.readyState == 4 && http.status == 200) {
+            alert("post success\n");
+          }
+          if(http.readyState == 4 && http.status == 500) {
+            alert("unacceptable item/price\n");
+          }
+        }
+    }
+
+  function viewMenu(){
+      var http = new XMLHttpRequest();
+      http.onreadystatechange = function () {
+        if(this.readyState == 4 && this.status == 200) {
+          data = JSON.parse(this.responseText);
+          
+          var table = "<table menu='3' id='menu-table' >"
+          table += "<tr> <td> " + "Item" + "</td> <td> " + "Price" +"</td><td></tr>";
+          for(x in data) {
+            table += "<tr> <td> " + data[x].Item + "</td> <td>" + data[x].Price + "</td> </tr>";
+          }
+          table += "</table>"
+          document.getElementById("posts").innerHTML = table;
+        }
+      }
+      http.open('GET',"/getMenu",true)
+      http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      http.send();
+  }
+  
+
+  function clearMenu(){
+    var http = new XMLHttpRequest();
+      http.onreadystatechange = function () {
+        if(this.readyState == 4 && this.status == 200) {
+         alert("menu now is clear!\n");
+        }
+      }
+      http.open('GET',"/clearMenu",true)
+      http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      http.send();
+  }
+  
+    </script>
+
+<label for="Item">Item:</label><br>
+<input type="text" id="item" name="item"><br><br>
+<label for="Price">Price:</label><br>
+<input type="text" id="price" name="price"><br><br>
+<button onclick="AddItem()" > Add Item </button><br><br>
+<button onclick="viewMenu()" > View Menu </button>
+<button onclick="clearMenu()" > Clear Menu </button>
+
+<p id="posts"> </p> 
+
+</body>
+
+</html>
