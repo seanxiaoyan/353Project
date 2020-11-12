@@ -83,7 +83,7 @@ app.get('/clearMenu', (req, res) => {
 
 
 app.get('/getMenu', (req, res) => {
-  var data;
+
   var sql = 'SELECT * FROM menu ORDER BY Item ASC';
   con.query(sql, function (err, result, fields) {
     if (err) throw err;

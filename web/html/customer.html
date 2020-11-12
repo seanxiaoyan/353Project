@@ -2,11 +2,60 @@
 <html>
 <head>
     <title> customer-coffeeshop </title>
+    <meta name="description" content="employee page">
+    <link rel="stylesheet" href="http://localhost:8080/styles.css" />
+    <script src="http://localhost:8080/customer.js" async></script>
 </head>
 <body>
-    <script type = "text/javascript"> 
-    
+    <script>
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200) {
+
+        myObj = JSON.parse(this.responseText);
+
+        var table = "<table class='menu-t' >"
+        table+= "<tr><th>Item</th><th>Price</th></tr>";
+        for(x in myObj) {
+            table += "<tr> <td class='item-title'> " + myObj[x].Item + "</td> <td class='item-price'>" + myObj[x].Price +
+                
+                "</td> <td> <button class='btn-add-item'>Add to order</button> </td></tr>";
+        }
+        table += "</table>"
+        document.getElementById("menu").innerHTML = table;
+        window.addEventListener('load', function() {
+            start();
+        })
+        }};
+
+        xmlhttp.open("GET", "/getMenu", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send();
     </script>
+    <section class="container content-section">
+        <h1 class="section-header">Menu</h1>
+        <div class="menu-table">
+            <p id="menu"></p>
+        </div>
+    </section>
+    
+    <section class="container content-section">
+        <h1 class="section-header">Your order</h1>
+        <div class="order-row">
+            <span class="order-item order-column">ITEM</span>
+            <span class="order-price order-column">PRICE</span>
+            <span class="order-quantity order-column">QUANTITY</span>
+        </div>
+        <div class="order-items">
+        </div>
+        <div class="order-total">
+            <strong class="order-total-title">Total</strong>
+            <span class="order-total-price">$0</span>
+        </div>
+        <button class="btn btn-primary btn-purchase" type="button">PURCHASE</button>
+    </section>
+    
+    
 </body>
 
 </html>
