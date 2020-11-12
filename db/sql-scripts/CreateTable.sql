@@ -1,5 +1,13 @@
 CREATE TABLE menu (
-    Item VARCHAR(50), 
+    Item VARCHAR(50) NOT NULL, 
     Price FLOAT
-)
-CHARACTER SET gbk
+);
+
+
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    Item VARCHAR(50),
+    Price FLOAT,
+    OrderTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    OrderStatus VARCHAR(50) DEFAULT 'in progress'
+);

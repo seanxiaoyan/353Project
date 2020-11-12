@@ -22,12 +22,18 @@ var con = mysql.createConnection({
 });
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
-
 app.get('/', (req, res) => {
   console.log("From Home Page")
-  res.sendFile(PATH + '/html/'+'posting.html');
+  res.sendFile(PATH + '/html/'+'index.html');
 });
-
+app.get('/employee', (req, res) => {
+  console.log("From Home Page")
+  res.sendFile(PATH + '/html/'+'employee.html');
+});
+app.get('/customer', (req, res) => {
+  console.log("From customer page")
+  res.sendFile(PATH + '/html/'+'customer.html');
+});
 app.post('/newItem', urlencodedParser, function (req, res) {
   var Item = req.body.item;
   var Price = req.body.price;
@@ -48,8 +54,21 @@ app.post('/newItem', urlencodedParser, function (req, res) {
     res.sendStatus(200);
   }
   });
-  
-  
+});
+
+app.delete('/deleteItem', urlencodedParser, function (req, res) {
+  var Item = req.body.item;
+  var sql = "DELETE FROM menu WHERE Item='"+Item+"'";
+  con.query(sql, function (err, result) {
+  if (err){
+    console.log(err.message);
+    res.sendStatus(500);
+  }
+  else{
+    console.log("DELETE OK");
+    res.sendStatus(200);
+  }
+  });
 });
 
 
@@ -66,6 +85,14 @@ app.get('/clearMenu', (req, res) => {
 app.get('/getMenu', (req, res) => {
   var data;
   var sql = 'SELECT * FROM menu ORDER BY Item ASC';
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });  
+});
+app.get('/getOrders', (req, res) => {
+  var data;
+  var sql = 'SELECT * FROM orders ORDER BY OrderTime ASC';
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     res.json(result);
