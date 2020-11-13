@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
   res.sendFile(PATH + '/html/'+'index.html');
 });
 app.get('/employee', (req, res) => {
-  if(req.session.loggedin){
+  if(req.session.loggedin && req.session.name == "employee"){
     console.log("From employee Page")
     res.sendFile(PATH + '/html/'+'employee.html');
   }
@@ -43,8 +43,8 @@ app.get('/employee', (req, res) => {
   }
 });
 app.get('/customer', (req, res) => {
-  if(req.session.loggedin){
-    console.log("From customer Page")
+  if(req.session.loggedin&& req.session.name == "customer"){
+    console.log(`session id: ${req.session.name}`)
     res.sendFile(PATH + '/html/'+'customer.html');
   }
   else{
@@ -141,14 +141,15 @@ app.post('/auth', urlencodedParser,function(req, res) {
 	var username = req.body.uname;
   var password = req.body.upassword;
   var role = req.body.role;
+  var sql = 'SELECT * FROM customers WHERE username = ? AND password = ?';
 	if (username && password) {
     if(role=="customer"){
-      con.query('SELECT * FROM customers WHERE username = ? AND password = ?',
-      [username, password], function(err, results, fields) {
+      con.query(sql,[username, password], function(err, results, fields) {
         if (err) throw err;
         if (results.length > 0) {
 				  req.session.loggedin = true;
           req.session.username = username;
+          req.session.name = role;
           if(role == "customer"){res.redirect('/customer');}
           else{res.redirect('/employee');}
         } 
@@ -159,12 +160,12 @@ app.post('/auth', urlencodedParser,function(req, res) {
 		  });
     }
     else{
-      con.query('SELECT * FROM employees WHERE username = ? AND password = ?',
-      [username, password], function(err, results, fields) {
+      con.query(sql,[username, password], function(err, results, fields) {
       if (err) throw err;
       if (results.length > 0) {
 				req.session.loggedin = true;
         req.session.username = username;
+        req.session.name = role;
         if(role == "customer"){res.redirect('/customer');}
         else{res.redirect('/employee');}
 			} else {
@@ -179,7 +180,47 @@ app.post('/auth', urlencodedParser,function(req, res) {
 	}
 });
 
+app.post('/register', urlencodedParser,function(req, res) {
+	var username = req.body.uname;
+  var password = req.body.upassword;
+  var role = req.body.role+='s';
+  var sql = `INSERT INTO ${role} (username, password) VALUES (?, ?)`;
+	if (username && password) {
+    if(role=="customers"){
+      con.query(sql,[username, password], function(err, results, fields) {
+        if (err) throw err;
+			  res.status(200).send("register sucuess");
+		  });
+    }
+    else{
+      con.query(sql,[username, password], function(err, results, fields) {
+        if (err) throw err;
+			  res.status(200).send("register sucuess");
+		});
+    }
+  } 
+  else {
+		res.status(500).send("Please Enter username/password")
+	}
+});
+app.post('/logout', (req, res) => {
+  req.session.destroy();
+  res.send("you have logout");
+});
+app.get('/select', (req, res) => {
 
+
+  var sql = 'SELECT * FROM customers';
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+
+    res.json(result);
+            
+
+    });
+  
+
+});
 app.use('/', express.static('html'));
 app.listen(PORT, HOST);
 

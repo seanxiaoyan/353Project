@@ -206,7 +206,6 @@ function addItem() {
       http.send();
   }
   function submitLogin(){
-    
     var http = new XMLHttpRequest();
     var url = '/auth';
     var uname =document.getElementById("username");
@@ -227,6 +226,44 @@ function addItem() {
         }
         if(http.readyState == 4 && http.status == 200) {
             window.location.replace(http.responseURL);
+          }
+      }
+  }
+
+  function submitRegister(){
+    var http = new XMLHttpRequest();
+    var url = '/register';
+    var uname =document.getElementById("username");
+    var inputUname = encodeURIComponent(uname.value);
+    var upassword =document.getElementById("password");
+    var inputUpassword = encodeURIComponent(upassword.value);
+    var urole =document.getElementById("role");
+    var inputRole = encodeURIComponent(urole.value);
+    var params = "uname="+inputUname+"&"+"upassword="+inputUpassword
+    +"&"+"role="+inputRole;
+    http.open('POST', url, true);
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    http.send(params);
+    http.onreadystatechange = function() {
+        if(http.readyState == 4 && http.status != 200) {
+          alert(http.responseText);
+        }
+        if(http.readyState == 4 && http.status == 200) {
+            alert(http.responseText);
+          }
+      }
+  }
+
+  function logout(){
+    var http = new XMLHttpRequest();
+    var url = '/logout';
+    var params ="";
+    http.open('POST', url, true);
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    http.send(params);
+    http.onreadystatechange = function() {
+        if(http.readyState == 4 && http.status == 200) {
+            window.location.replace('http://localhost')
           }
       }
   }

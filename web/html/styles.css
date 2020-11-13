@@ -102,8 +102,8 @@
     margin-bottom: 15px;
     box-sizing:border-box;
 }
-.login-form button[name="submit"] {
-    width: 100%;
+.login-form button[name="Login"] {
+    width: 50%;
     padding: 15px;
     background-color: #535b63;
     border: 0;
@@ -111,6 +111,22 @@
     cursor: pointer;
     font-weight: bold;
     color: #ffffff;
+    position: relative;
+    bottom: -10px;
+    left: 70px;
+}
+.login-form button[name="Register"] {
+    width: 50%;
+    padding: 15px;
+    background-color: #535b63;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+    position: relative;
+    bottom: -30px;
+    left: 70px;
 }
 .login-form select{
     position: relative;
@@ -120,4 +136,18 @@
     font-family: 'Open Sans', 'Helvetica Neue', 'Segoe UI', 'Calibri', 'Arial', sans-serif;
     font-size: 18px;
     color: #60666d;
+}
+.logoutBtn button[name="lgoutBtn"] {
+    width: 5%;
+   
+    padding: 15px;
+    background-color: #535b63;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+    position: absolute;
+    top:5%;
+    right:40%;
 }
