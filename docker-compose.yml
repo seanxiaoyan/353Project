@@ -22,7 +22,7 @@ services:
       - db
     restart: on-failure
     ports:
-      - "8080:8080"
+      - "80:80"
     volumes:
       - /c/Users/51676/Desktop/353Project/web:/usr/src/app
 

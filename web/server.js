@@ -3,11 +3,11 @@
 
 const express = require('express');
 const bodyParser = require("body-parser");
+const session = require('express-session')
 
 
 
-
-const PORT = 8080;
+const PORT = 80;
 const HOST = '0.0.0.0';
 const app = express();
 const PATH = __dirname;
@@ -20,6 +20,13 @@ var con = mysql.createConnection({
   password        : process.env.MYSQL_PASSWORD,
   database        : process.env.MYSQL_DATABASE
 });
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(session({
+	secret: 'secret',
+	resave: true,
+	saveUninitialized: true
+}));
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.get('/', (req, res) => {
@@ -27,19 +34,33 @@ app.get('/', (req, res) => {
   res.sendFile(PATH + '/html/'+'index.html');
 });
 app.get('/employee', (req, res) => {
-  console.log("From Home Page")
-  res.sendFile(PATH + '/html/'+'employee.html');
+  if(req.session.loggedin){
+    console.log("From employee Page")
+    res.sendFile(PATH + '/html/'+'employee.html');
+  }
+  else{
+    res.send('Please login to view this page');
+  }
 });
 app.get('/customer', (req, res) => {
-  console.log("From customer page")
-  res.sendFile(PATH + '/html/'+'customer.html');
+  if(req.session.loggedin){
+    console.log("From customer Page")
+    res.sendFile(PATH + '/html/'+'customer.html');
+  }
+  else{
+    res.send('Please login to view this page');
+  }
 });
+app.get('/login', function(req, res) {
+  console.log("From login page")
+  res.sendFile(PATH + '/html/'+'login.html');
+});
+
+
+
 app.post('/newItem', urlencodedParser, function (req, res) {
   var Item = req.body.item;
   var Price = req.body.price;
-  console.log("Item and price: ");
-  console.log(Item);
-  console.log(Price);
 
   // var date = (new Date()).toISOString();
   // var timestamp = date.substring(0,10)+ ' '+date.substring(11,19);
@@ -66,6 +87,23 @@ app.delete('/deleteItem', urlencodedParser, function (req, res) {
   }
   else{
     console.log("DELETE OK");
+    res.sendStatus(200);
+  }
+  });
+});
+
+app.post('/newOrder', urlencodedParser, function (req, res) {
+  var Item = req.body.item;
+  var Price = req.body.price;
+
+  var sql = "INSERT INTO orders (Item, Price) VALUES ('"+Item+"', '"+Price+"')";
+  con.query(sql, function (err, result) {
+  if (err){
+    console.log(err.message);
+    res.sendStatus(500);
+  }
+  else{
+    console.log("INSERT OK");
     res.sendStatus(200);
   }
   });
@@ -98,6 +136,49 @@ app.get('/getOrders', (req, res) => {
     res.json(result);
   });  
 });
+
+app.post('/auth', urlencodedParser,function(req, res) {
+	var username = req.body.uname;
+  var password = req.body.upassword;
+  var role = req.body.role;
+	if (username && password) {
+    if(role=="customer"){
+      con.query('SELECT * FROM customers WHERE username = ? AND password = ?',
+      [username, password], function(err, results, fields) {
+        if (err) throw err;
+        if (results.length > 0) {
+				  req.session.loggedin = true;
+          req.session.username = username;
+          if(role == "customer"){res.redirect('/customer');}
+          else{res.redirect('/employee');}
+        } 
+        else {
+				  res.status(401).send('Incorrect Username and/or Password!');
+			  }			
+			  res.end();
+		  });
+    }
+    else{
+      con.query('SELECT * FROM employees WHERE username = ? AND password = ?',
+      [username, password], function(err, results, fields) {
+      if (err) throw err;
+      if (results.length > 0) {
+				req.session.loggedin = true;
+        req.session.username = username;
+        if(role == "customer"){res.redirect('/customer');}
+        else{res.redirect('/employee');}
+			} else {
+				res.send('Incorrect Username and/or Password!');
+			}			
+			res.end();
+		});
+    }
+  } 
+  else {
+		res.status(500).send("Please Enter username/password")
+	}
+});
+
 
 app.use('/', express.static('html'));
 app.listen(PORT, HOST);
