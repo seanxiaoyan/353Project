@@ -313,3 +313,45 @@ function addItem() {
     http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     http.send();
   }
+
+  function cancelOrder(){
+    var http = new XMLHttpRequest();
+    var url = '/cancelOrder';
+    var order_id =document.getElementById("cancel-order");
+    var id = encodeURIComponent(order_id.value);
+  
+    var params = "order_id="+id;
+    console.log(params);
+    http.open('POST', url, true);
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    http.send(params);
+    http.onreadystatechange = function() {
+        if(http.readyState == 4 && http.status != 200) {
+          alert(http.responseText);
+        }
+        if(http.readyState == 4 && http.status == 200) {
+            alert(http.responseText);
+          }
+      }
+  }
+  function updateOrder(){
+    var http = new XMLHttpRequest();
+    var url = '/updateOrder';
+    var order_id =document.getElementById("update-order-id");
+    var id = encodeURIComponent(order_id.value);
+    var order_status =document.getElementById("update-order-status");
+    var status = encodeURIComponent(order_status.value);
+  
+    var params = "order_id="+id+"&"+"order_status="+status;
+    http.open('POST', url, true);
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    http.send(params);
+    http.onreadystatechange = function() {
+        if(http.readyState == 4 && http.status != 200) {
+          alert(http.responseText);
+        }
+        if(http.readyState == 4 && http.status == 200) {
+            alert(http.responseText);
+          }
+      }
+  }

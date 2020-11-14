@@ -207,10 +207,49 @@ app.post('/register', urlencodedParser,function(req, res) {
 		res.status(500).send("Please Enter username/password")
 	}
 });
+
+
+app.post('/cancelOrder', urlencodedParser,function(req, res) {
+	var order_id = req.body.order_id;
+
+  var username = req.session.username;
+
+  var sql = 'DELETE FROM orders WHERE order_id = ? AND customer_name = ?';
+   
+  con.query(sql,[order_id, username], function(err, results) {
+    if (err) throw err;
+    if(results.affectedRows>0){ res.status(200).send("cancel ok");}
+    else{
+      res.status(200).send("order not exist");
+    }
+  });
+    
+});
+
+app.post('/updateOrder', urlencodedParser,function(req, res) {
+	var order_id = req.body.order_id;
+  var order_status = req.body.order_status;
+
+  var sql = "UPDATE orders SET order_status=? WHERE order_id = ?";
+   
+  con.query(sql,[order_status,order_id], function(err, results) {
+    if (err) throw err;
+    if(results.affectedRows>0){ res.status(200).send("update ok");}
+    else{
+      res.status(200).send("order not exist");
+    }
+  });
+    
+});
+
+
 app.post('/logout', (req, res) => {
   req.session.destroy();
   res.send("you have logout");
 });
+
+
+
 app.get('/select', (req, res) => {
 
 

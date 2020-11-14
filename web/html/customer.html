@@ -32,7 +32,7 @@
             <strong class="order-total-title">Total</strong>
             <span class="order-total-price">$0</span>
         </div>
-        <button onclick="submitOrderOnClick()" class="btn btn-primary btn-submit" type="button">Submit</button>
+        <button onclick="submitOrderOnClick()" class="btn btn-primary btn-submit" type="button">Place order</button>
         <button onclick="viewOrderOnClick()" class="btn btn-primary btn-viewOrder" type="button">View your order</button>
     </section>
     
@@ -42,6 +42,13 @@
     <div class="receipt-table">
         <p id="receipt-table"></p>
     </div>
+    </section>
+
+    <section class = "cancel-order-section">
+
+        <label for="cancel-order">Cancel order</label>
+        <input type="text" id="cancel-order" name="cancel-order" placeholder="order id" required>
+        <button name= "cancelOrder" onclick="cancelOrder()">Submit</button>
     </section>
 
     
