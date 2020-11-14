@@ -14,34 +14,31 @@ function addItemOnClick() {
         });
     }
 }
-function submitOrderOnClick(){
-    var submitButton =  document.getElementsByClassName('btn-submit')[0];
-    submitButton.addEventListener('click', function(){
-        
-        var orderItems = document.getElementsByClassName('order-items')[0];
-        var receipt = document.getElementsByClassName('receipt-table')[0];
-
-    
-        var table =  "<table class='menu-t' >"
-        table+= "<tr><th>Item</th><th>Price</th><th>Quantity</th></tr>";
-        for (var i = 0; i < orderItems.getElementsByClassName('order-item-title').length;i++){
-            table += 
-            "<tr> <td>"
-            +orderItems.getElementsByClassName('order-item-title')[i].innerText
-            + "</td><td>"
-            +orderItems.getElementsByClassName('order-price')[i].innerText
-            +"</td><td>"
-            +(orderItems.getElementsByClassName('order-quantity-input')[i].value).toString()
-            +"</td></tr>"
+function submitOrderOnClick(){      
+    var orderItems = document.getElementsByClassName('order-items')[0];
+    var item_all="";
+    for (var i = 0; i < orderItems.getElementsByClassName('order-item-title').length;i++){
+        item_all += orderItems.getElementsByClassName('order-item-title')[i].innerText
+        item_all +=" "
+        item_all += (orderItems.getElementsByClassName('order-quantity-input')[i].value).toString()
+        item_all +=";"
+       
+    }
+    var total_price =document.getElementsByClassName('order-total-price')[0].innerText;
+    var http = new XMLHttpRequest();
+    var url = '/newOrder';
+    var params = "items="+item_all+"&"+"total="+total_price.substring(1);
+    http.open('POST', url, true);
+    http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    http.send(params);
+    http.onreadystatechange = function() {
+        if(http.readyState == 4 && http.status == 200) {
+          alert("Place order success\n");
         }
-        table+="</table>"
-
-        var receiptContent = table
-        
-        receipt.innerHTML=receiptContent
-
-  
-    })
+        if(http.readyState == 4 && http.status == 500) {
+          alert("unaccept\n");
+        }
+      }
 }
 function removeItemOnClick(){
     var removeOrderItemButtons = document.getElementsByClassName('btn-rm');
@@ -94,7 +91,6 @@ function addItemToOrder(title, price) {
     orderItems.append(orderRow)
     removeItemOnClick();
     quantityInputOnClick();
-    submitOrderOnClick();
 }
 
 function updateOrderTotal() {
@@ -152,37 +148,19 @@ function addItem() {
       }
   }
 
-  // function viewMenu(){
-  //     var http = new XMLHttpRequest();
-  //     http.onreadystatechange = function () {
-  //       if(this.readyState == 4 && this.status == 200) {
-  //         data = JSON.parse(this.responseText);
-          
-  //         var table = "<table menu='3' id='menu-table' >"
-  //         table += "<tr> <td> " + "Item" + "</td> <td> " + "Price" +"</td><td></tr>";
-  //         for(x in data) {
-  //           table += "<tr> <td> " + data[x].Item + "</td> <td>" + data[x].Price + "</td> </tr>";
-  //         }
-  //         table += "</table>"
-  //         document.getElementById("MENU").innerHTML = table;
-  //       }
-  //     }
-  //     http.open('GET',"/getMenu",true)
-  //     http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  //     http.send();
-  // }
-  function viewOrder(){
+  function viewOrder_all(){
       var http = new XMLHttpRequest();
       http.onreadystatechange = function () {
         if(this.readyState == 4 && this.status == 200) {
           data = JSON.parse(this.responseText);
           
-          var table = "<table order='3' id='order-table' >"
-          table += "<tr> <td> " + "Item" + "</td> <td> " + "Price" +"</td><td>"+"time" +"</td><td>"
-          +"status" +"</td></tr>";
+          var table = "<table class ='orders-table' id='orders-table' >"
+          table += "<tr> <td> " + "order_id" + "</td> <td> " + "customer_name" +"</td><td>"+"items" +"</td><td>"
+          +"total" + "</td> <td> "+"order_time" +"</td> <td>"+"status" +"</td></tr>";
           for(x in data) {
-            table += "<tr> <td> " + data[x].Item + "</td> <td>" + data[x].Price 
-              + "</td> <td>" + data[x].OrderTime+ "</td> <td>" + data[x].OrderStatus  + "</td></tr>";
+            table += "<tr> <td> " + data[x].order_id + "</td> <td>" + data[x].customer_name 
+              + "</td> <td>" + data[x].items+ "</td> <td> $" + data[x].total + "</td> <td>"
+              + data[x].order_time+ "</td> <td>" + data[x].order_status+"</td></tr>";
           }
           table += "</table>"
           document.getElementById("Order").innerHTML = table;
@@ -311,4 +289,27 @@ function addItem() {
     document.getElementById("menu").innerHTML = table;
     addItemOnClick()
     }};
+  }
+
+  function viewOrderOnClick(){
+    var http = new XMLHttpRequest();
+    http.onreadystatechange = function () {
+      if(this.readyState == 4 && this.status == 200) {
+        data = JSON.parse(this.responseText);
+        
+        var table = "<table class ='orders-table' id='orders-table' >"
+        table += "<tr> <td> " + "order_id" + "</td> <td> " + "customer_name" +"</td><td>"+"items" +"</td><td>"
+        +"total" + "</td> <td> "+"order_time" +"</td> <td>"+"status" +"</td></tr>";
+        for(x in data) {
+          table += "<tr> <td> " + data[x].order_id + "</td> <td>" + data[x].customer_name 
+            + "</td> <td>" + data[x].items+ "</td> <td> $" + data[x].total + "</td> <td>"
+            + data[x].order_time+ "</td> <td>" + data[x].order_status+"</td></tr>";
+        }
+        table += "</table>"
+        document.getElementById("receipt-table").innerHTML = table;
+      }
+    }
+    http.open('GET',"/getOrder_customer",true)
+    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    http.send();
   }

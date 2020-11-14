@@ -39,7 +39,7 @@ app.get('/employee', (req, res) => {
     res.sendFile(PATH + '/html/'+'employee.html');
   }
   else{
-    res.send('Please login to view this page');
+    res.sendFile(PATH + '/html/'+'login.html');
   }
 });
 app.get('/customer', (req, res) => {
@@ -49,7 +49,7 @@ app.get('/customer', (req, res) => {
     res.sendFile(PATH + '/html/'+'customer.html');
   }
   else{
-    res.send('Please login to view this page');
+    res.sendFile(PATH + '/html/'+'login.html');
   }
 });
 app.get('/login', function(req, res) {
@@ -63,8 +63,6 @@ app.post('/newItem', urlencodedParser, function (req, res) {
   var Item = req.body.item;
   var Price = req.body.price;
 
-  // var date = (new Date()).toISOString();
-  // var timestamp = date.substring(0,10)+ ' '+date.substring(11,19);
   var sql = "INSERT INTO menu (Item, Price) VALUES ('"+Item+"', '"+Price+"')";
   con.query(sql, function (err, result) {
   if (err){
@@ -93,10 +91,10 @@ app.delete('/deleteItem', urlencodedParser, function (req, res) {
 });
 
 app.post('/newOrder', urlencodedParser, function (req, res) {
-  var Item = req.body.item;
-  var Price = req.body.price;
-
-  var sql = "INSERT INTO orders (Item, Price) VALUES ('"+Item+"', '"+Price+"')";
+  var items = req.body.items;
+  var total = parseFloat(req.body.total);
+  var customer_name = req.session.username;
+  var sql = "INSERT INTO orders (customer_name,items, total) VALUES ('"+customer_name+"','"+items+"', '"+total+"')";
   con.query(sql, function (err, result) {
   if (err){
     console.log(err.message);
@@ -132,6 +130,14 @@ app.get('/getOrders', (req, res) => {
   var data;
   var sql = 'SELECT * FROM orders ORDER BY order_time ASC';
   con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.json(result);
+  });  
+});
+app.get('/getOrder_customer', (req, res) => {
+  var data;
+  var sql = 'SELECT * FROM orders WHERE customer_name = ?';
+  con.query(sql, [req.session.username],function (err, result, fields) {
     if (err) throw err;
     res.json(result);
   });  
@@ -208,7 +214,7 @@ app.post('/logout', (req, res) => {
 app.get('/select', (req, res) => {
 
 
-  var sql = 'SELECT * FROM customers';
+  var sql = 'SELECT * FROM orders';
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
 

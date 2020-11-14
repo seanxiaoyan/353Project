@@ -151,3 +151,14 @@
     top:5%;
     right:40%;
 }
+.btn-viewOrder {
+    display: block;
+    font-size: 1.00em;
+    position: relative;
+    bottom: -30px;
+    
+} 
+
+.orders-table{
+    border: 1px solid black;
+}
