@@ -34,7 +34,7 @@ app.get('/', (req, res) => {
   res.sendFile(PATH + '/html/'+'index.html');
 });
 app.get('/employee', (req, res) => {
-  if(req.session.loggedin && req.session.name == "employee"){
+  if(req.session.loggedin && req.session.name == "employees"){
     console.log("From employee Page")
     res.sendFile(PATH + '/html/'+'employee.html');
   }
@@ -43,7 +43,8 @@ app.get('/employee', (req, res) => {
   }
 });
 app.get('/customer', (req, res) => {
-  if(req.session.loggedin&& req.session.name == "customer"){
+  console.log(req.session.name);
+  if(req.session.loggedin&& req.session.name == "customers"){
     console.log(`session id: ${req.session.name}`)
     res.sendFile(PATH + '/html/'+'customer.html');
   }
@@ -140,18 +141,17 @@ app.get('/getOrders', (req, res) => {
 app.post('/auth', urlencodedParser,function(req, res) {
 	var username = req.body.uname;
   var password = req.body.upassword;
-  var role = req.body.role;
-  var sql = 'SELECT * FROM customers WHERE username = ? AND password = ?';
+  var role = req.body.role+='s';
+  var sql = `SELECT * FROM ${role} WHERE username = ? AND password = ?`;
 	if (username && password) {
-    if(role=="customer"){
+    if(role=="customers"){
       con.query(sql,[username, password], function(err, results, fields) {
         if (err) throw err;
         if (results.length > 0) {
 				  req.session.loggedin = true;
           req.session.username = username;
           req.session.name = role;
-          if(role == "customer"){res.redirect('/customer');}
-          else{res.redirect('/employee');}
+          res.redirect('/customer');
         } 
         else {
 				  res.status(401).send('Incorrect Username and/or Password!');
@@ -166,10 +166,9 @@ app.post('/auth', urlencodedParser,function(req, res) {
 				req.session.loggedin = true;
         req.session.username = username;
         req.session.name = role;
-        if(role == "customer"){res.redirect('/customer');}
-        else{res.redirect('/employee');}
+        res.redirect('/employee');
 			} else {
-				res.send('Incorrect Username and/or Password!');
+				res.status(401).send('Incorrect Username and/or Password!');
 			}			
 			res.end();
 		});
