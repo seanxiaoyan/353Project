@@ -72,7 +72,6 @@ app.post('/newItem', urlencodedParser, function (req, res) {
     res.sendStatus(500);
   }
   else{
-    console.log("INSERT OK");
     res.sendStatus(200);
   }
   });
@@ -82,15 +81,15 @@ app.delete('/deleteItem', urlencodedParser, function (req, res) {
   var Item = req.body.item;
   var sql = "DELETE FROM menu WHERE Item='"+Item+"'";
   con.query(sql, function (err, result) {
-  if (err){
-    console.log(err.message);
-    res.sendStatus(500);
-  }
-  else{
-    console.log("DELETE OK");
-    res.sendStatus(200);
-  }
-  });
+    if (err){
+      console.log(err.message);
+      res.sendStatus(500);
+    }
+    if(result.affectedRows>0){ res.status(200).send("delete ok");}
+    else{
+      res.status(200).send("Item not exist");
+    }
+    });
 });
 
 app.post('/newOrder', urlencodedParser, function (req, res) {
@@ -131,7 +130,7 @@ app.get('/getMenu', (req, res) => {
 });
 app.get('/getOrders', (req, res) => {
   var data;
-  var sql = 'SELECT * FROM orders ORDER BY OrderTime ASC';
+  var sql = 'SELECT * FROM orders ORDER BY order_time ASC';
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     res.json(result);

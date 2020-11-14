@@ -147,30 +147,30 @@ function addItem() {
     http.send(params);
     http.onreadystatechange = function() {
         if(http.readyState == 4 && http.status == 200) {
-          alert("delete success\n");
+          alert(http.responseText);
         }
       }
   }
 
-  function viewMenu(){
-      var http = new XMLHttpRequest();
-      http.onreadystatechange = function () {
-        if(this.readyState == 4 && this.status == 200) {
-          data = JSON.parse(this.responseText);
+  // function viewMenu(){
+  //     var http = new XMLHttpRequest();
+  //     http.onreadystatechange = function () {
+  //       if(this.readyState == 4 && this.status == 200) {
+  //         data = JSON.parse(this.responseText);
           
-          var table = "<table menu='3' id='menu-table' >"
-          table += "<tr> <td> " + "Item" + "</td> <td> " + "Price" +"</td><td></tr>";
-          for(x in data) {
-            table += "<tr> <td> " + data[x].Item + "</td> <td>" + data[x].Price + "</td> </tr>";
-          }
-          table += "</table>"
-          document.getElementById("MENU").innerHTML = table;
-        }
-      }
-      http.open('GET',"/getMenu",true)
-      http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      http.send();
-  }
+  //         var table = "<table menu='3' id='menu-table' >"
+  //         table += "<tr> <td> " + "Item" + "</td> <td> " + "Price" +"</td><td></tr>";
+  //         for(x in data) {
+  //           table += "<tr> <td> " + data[x].Item + "</td> <td>" + data[x].Price + "</td> </tr>";
+  //         }
+  //         table += "</table>"
+  //         document.getElementById("MENU").innerHTML = table;
+  //       }
+  //     }
+  //     http.open('GET',"/getMenu",true)
+  //     http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  //     http.send();
+  // }
   function viewOrder(){
       var http = new XMLHttpRequest();
       http.onreadystatechange = function () {
@@ -268,4 +268,47 @@ function addItem() {
       }
   }
 
-  
+  function displayMenu_customer(){
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("GET", "/getMenu", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send();
+    xmlhttp.onreadystatechange = function() {
+    if(this.readyState == 4 && this.status == 200) {
+
+    myObj = JSON.parse(this.responseText);
+
+    var table = "<table class='menu-t' >"
+    table+= "<tr><th>Item</th><th>Price</th></tr>";
+    for(x in myObj) {
+        table += "<tr> <td class='item-title'> " + myObj[x].Item + "</td> <td class='item-price'>" + myObj[x].Price +
+            
+            "</td> <td> <button class='btn-add-item'>Add to order</button> </td></tr>";
+    }
+    table += "</table>"
+    document.getElementById("menu").innerHTML = table;
+    addItemOnClick()
+    }};
+  }
+  function displayMenu_employee(){
+    xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("GET", "/getMenu", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send();
+    xmlhttp.onreadystatechange = function() {
+    if(this.readyState == 4 && this.status == 200) {
+
+    myObj = JSON.parse(this.responseText);
+
+    var table = "<table class='menu-t' >"
+    table+= "<tr><th>Item</th><th>Price</th></tr>";
+    for(x in myObj) {
+        table += "<tr> <td class='item-title'> " + myObj[x].Item + "</td> <td class='item-price'>" + myObj[x].Price +
+            
+            "</td></tr>";
+    }
+    table += "</table>"
+    document.getElementById("menu").innerHTML = table;
+    addItemOnClick()
+    }};
+  }

@@ -4,34 +4,11 @@
     <title> customer-coffeeshop </title>
     <meta name="description" content="employee page">
     <link rel="stylesheet" href="http://localhost/styles.css" />
-    <script src="http://localhost/page.js" async></script>
-</head>
-<body>
-    <script>
-        
-        xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("GET", "/getMenu", true);
-        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xmlhttp.send();
-        xmlhttp.onreadystatechange = function() {
-        if(this.readyState == 4 && this.status == 200) {
-
-        myObj = JSON.parse(this.responseText);
-
-        var table = "<table class='menu-t' >"
-        table+= "<tr><th>Item</th><th>Price</th></tr>";
-        for(x in myObj) {
-            table += "<tr> <td class='item-title'> " + myObj[x].Item + "</td> <td class='item-price'>" + myObj[x].Price +
-                
-                "</td> <td> <button class='btn-add-item'>Add to order</button> </td></tr>";
-        }
-        table += "</table>"
-        document.getElementById("menu").innerHTML = table;
-        addItemOnClick();
-        }};
-
-
+    <script src="http://localhost/page.js" async>
     </script>
+</head>
+<body onload="displayMenu_customer()">
+
     <section class="container content-section">
         <h1 class="section-header">Menu</h1>
         <div class="menu-table">
