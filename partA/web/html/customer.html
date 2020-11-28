@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> coffeeshop </title>
+    <meta name="description" content="employee page">
+    <link rel="stylesheet" href="http://localhost/styles.css" />
+    <script src="http://localhost/page.js" async>
+    </script>
+</head>
+
+<body>
+    <section class="container content-section">
+        <h1 class = "section-header">Welcome to Xu's coffeeshop</h1>
+    </section>
+    <section class="container content-section">
+        <h1 class="section-header">Menu</h1>
+        <div class="menu-table">
+            <p id="menu"></p>
+        </div>
+        <div class="logBtn">
+            <button onclick="login()" name="lginBtn">Employee log in</button>
+        </div>
+        
+    </section>
+    
+    <section class="container content-section">
+        <h1 class="section-header">Your cart</h1>
+        <div class="order-row">
+            <span class="order-item order-column">ITEM</span>
+            <span class="order-price order-column">PRICE</span>
+            <span class="order-quantity order-column">QUANTITY</span>
+        </div>
+        <div class="order-items">
+        </div>
+        <div class="order-total">
+            <strong class="order-total-title">Total</strong>
+            <span class="order-total-price">$0</span>
+        </div>
+        <label for="customer_name">your name: </label>
+        <input id = "customer_name" type="text">
+        <button onclick="submitOrderOnClick();viewOrder_customer()" class="btn btn-primary btn-submit" type="button">Place order</button>
+        <button onclick="viewOrderOnClick()" class="btn btn-primary btn-viewOrder" type="button">View your order</button>
+    </section>
+    
+
+    <section class="container content-section">
+    <h1 class= "section-header"> Orders</h1>
+    <div class="receipt-table">
+        <p id="receipt-table"></p>
+    </div>
+    </section>
+
+    <section class = "container content-section">
+        <label for="cancel-order">Cancel order</label>
+        <input type="text" id="cancel-order" name="cancel-order" placeholder="order id" required>
+        <button name= "cancelOrder" onclick="cancelOrder()">Submit</button>
+    </section>
+
+    
+</body>
+
+<script>
+    setInterval(function displayMenu (){
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("GET", "/getMenu", true);
+        xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xmlhttp.send();
+        xmlhttp.onreadystatechange = function() {
+        if(this.readyState == 4 && this.status == 200) {
+
+        myObj = JSON.parse(this.responseText);
+
+        var table = "<table class='menu-t' >"
+        table+= "<tr><th>Item</th><th>Price</th></tr>";
+        for(x in myObj) {
+            table += "<tr> <td class='item-title'> " + myObj[x].Item + "</td> <td class='item-price'>" + myObj[x].Price +
+                
+                "</td> <td> <button class='btn-add-item'>Add to order</button> </td></tr>";
+        }
+        table += "</table>"
+        document.getElementById("menu").innerHTML = table;
+        addItemOnClick()
+        }};
+    },500);
+    setInterval(function viewOrder_customer(){
+        var http = new XMLHttpRequest();
+        http.onreadystatechange = function () {
+        if(this.readyState == 4 && this.status == 200) {
+            data = JSON.parse(this.responseText);
+            
+            var table = "<table class ='orders-table' id='orders-table' >"
+            table += "<tr> <td> " + "order_id" + "</td> <td> " + "customer_name" +"</td><td>"+"items" +"</td><td>"
+            +"total" + "</td> <td> "+"order_time" +"</td> <td>"+"status" +"</td></tr>";
+            for(x in data) {
+            table += "<tr> <td> " + data[x].order_id + "</td> <td>" + data[x].customer_name 
+                + "</td> <td>" + data[x].items+ "</td> <td> $" + data[x].total + "</td> <td>"
+                + data[x].order_time+ "</td> <td>" + data[x].order_status+"</td></tr>";
+            }
+            table += "</table>"
+            document.getElementById("receipt-table").innerHTML = table;
+        }
+        }
+        http.open('GET',"/getOrder_customer",true)
+        http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        http.send();
+    })
+</script>
+</html>

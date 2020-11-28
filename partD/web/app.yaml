@@ -1,0 +1,10 @@
+runtime: nodejs10
+env_variables:
+  DATABASE_INSTANCE: "coffee-shop-297010:us-central1:db"
+  DATABASE_USER: "xu"
+  DATABASE_PASSWORD: "admin"
+  DATABASE_NAME: "coffeeshop"
+
+handlers:
+- url: /static
+  static_dir: static

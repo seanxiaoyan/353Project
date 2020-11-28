@@ -1,0 +1,178 @@
+
+* {
+    box-sizing: border-box;
+    font-family: Raleway;
+    color: rgb(11, 40, 122);
+}
+
+.order-item {
+    width: 45%;
+}
+.order-header {
+    font-weight: bold;
+    font-size: 1.25em;
+    color: #333;
+}
+.order-quantity {
+    width: 35%;
+}
+.order-quantity-input {
+    height: 34px;
+    width: 50px;
+    border-radius: 5px;
+    border: 1px solid #56CCF2;
+    background-color: #eee;
+    color: #333;
+    padding: 0;
+    text-align: center;
+    font-size: 1.2em;
+    margin-right: 25px;
+}
+.order-row:last-child {
+    border-bottom: 1px solid black;
+}
+
+.order-row:last-child .order-column {
+    border: none;
+}
+.order-row {
+    display: flex;
+}
+.section-header {
+    font-family: Times New Roman;
+    font-weight: normal;
+    color: #333;
+    text-align: center;
+    font-size: 2.5em;
+}
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1.5em;
+}
+.menu-table {
+    position:center;
+}
+.content-section {
+    margin: 1em;
+}
+.order-column {
+    display: flex;
+    align-items: center;
+    margin-right: 1.5em;
+    padding-bottom: 10px;
+    margin-top: 10px;
+}
+.item-title {
+    color: #333;
+    margin-left: .5em;
+    font-size: 1.2em;
+}
+.order-price {
+    width: 20%;
+    font-size: 1.2em;
+    color: #333;
+}
+.order-total {
+    text-align: end;
+  
+}
+.menu-t{
+    border: 1px solid black;
+    width: 100%;
+    text-align: center;
+}
+
+.login-form {
+    width: 300px;
+    margin: 0 auto;
+    font-family: Tahoma, Geneva, sans-serif;
+}
+.login-form h1 {
+    text-align: center;
+    color: #4d4d4d;
+    font-size: 24px;
+    padding: 20px 0 20px 0;
+}
+.login-form input[type="password"],
+.login-form input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #dddddd;
+    margin-bottom: 15px;
+    box-sizing:border-box;
+}
+.login-form button[name="Login"] {
+    width: 50%;
+    padding: 15px;
+    background-color: #535b63;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+    position: relative;
+    bottom: -10px;
+    left: 70px;
+}
+.login-form button[name="Register"] {
+    width: 50%;
+    padding: 15px;
+    background-color: #535b63;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+    position: relative;
+    bottom: -30px;
+    left: 70px;
+}
+.login-form select{
+    position: relative;
+    display: block;
+    width: 100%;
+    margin: 0 auto;
+    font-family: 'Open Sans', 'Helvetica Neue', 'Segoe UI', 'Calibri', 'Arial', sans-serif;
+    font-size: 18px;
+    color: #60666d;
+}
+.logBtn button[name="lgoutBtn"] {
+    width: 5%;
+   
+    padding: 15px;
+    background-color: #535b63;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+    position: absolute;
+    top:5%;
+    right:40%;
+}
+.logBtn button[name="lginBtn"] {
+    width: 5%;
+   
+    padding: 15px;
+    background-color: #535b63;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+    position: absolute;
+    top:5%;
+    right:40%;
+}
+.btn-viewOrder {
+    display: block;
+    font-size: 1.00em;
+    position: relative;
+    bottom: -30px;
+    
+} 
+
+.orders-table{
+    border: 1px solid black;
+}
